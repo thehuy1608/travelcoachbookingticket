@@ -5,8 +5,9 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -53,34 +54,49 @@
             <div class="row my-4">
                 <div class="col-lg-4">
                     <form class="panel">
-                        <h1 style="font-size: 16px;">Châu Đốc - Cần Thơ ngày 13-4-2018</h1>
+                        <h1 style="font-size: 14px;">${sessionScope.trip_info}</h1>
                         <div class="contentform">
                             <div class="form-group">
                                 <p>Chọn tuyến xe <span>*</span></p><span class="icon-case"><i class="fa fa-bus"></i></span>
-                                <input type="input" name="prenom" id="prenom" disabled value="Châu Đốc => Cần Thơ" />
+                                    <c:set var="line_id" value="${sessionScope.line_id}" />
+                                <select name="line" id="prenom" class="form-control" onchange="handleSelectLine(this)">
+                                    <option value="" disabled selected>&nbsp;</option>
+                                    <c:forEach items="${sessionScope.line_list}" var="line">
+                                        <c:if test="${line.getLineId() == line_id}">
+                                            <option value="${line.getLineId()}" selected>${line.getLineName()}</option>
+                                        </c:if>
+                                        <c:if test="${line.getLineId() != line_id}">
+                                            <option value="${line.getLineId()}">${line.getLineName()}</option>
+                                        </c:if>
+                                    </c:forEach>
+                                </select>
                                 <div class="validation"></div>
                                 <div class="form-group">
                                     <p>Chọn giờ khởi hành <span>*</span></p><span class="icon-case"><i class="fa fa-clock"></i></span>
-                                    <select class="form-control">
-                                        <option value="" label="05:00 (Ghế)" selected="selected">05:00 (Ghế)</option>
-                                        <option value="" label="06:30 (Ghế)">06:30 (Ghế)</option>
-                                        <option value="" label="08:00 (Ghế)">08:00 (Ghế)</option>
-                                        <option value="" label="10:00 (Ghế)">10:00 (Ghế)</option>
-                                        <option value="" label="11:30 (Ghế)">11:30 (Ghế)</option>
-                                        <option value="" label="13:00 (Ghế)">13:00 (Ghế)</option>
-                                        <option value="" label="14:30 (Ghế)">14:30 (Ghế)</option>
-                                        <option value="" label="15:30 (Ghế)">15:30 (Ghế)</option>
-                                        <option value="" label="17:00 (Ghế)">17:00 (Ghế)</option>
-                                        <option value="" label="19:00 (Ghế)">19:00 (Ghế)</option>
+                                        <c:set var="schedule_index" value="${0}" />
+                                        <c:set var="selected_schedule_index" value="${requestScope.selected_schedule_index}" />
+                                    <select name="start_time" class="form-control" onchange="handleSelectStartTime(this)">
+                                        <option value="" disabled selected>&nbsp;</option>
+                                        <c:forEach items="${sessionScope.schedule_list}" var="schedule">
+                                            <c:if test="${selected_schedule_index == schedule_index}">
+                                                <option value="${schedule_index}" selected>${schedule.getStartTime()}</option>
+                                            </c:if>
+                                            <c:if test="${selected_schedule_index != schedule_index}">
+                                                <option value="${schedule_index}">${schedule.getStartTime()}</option>
+                                            </c:if>
+                                            <c:set var="schedule_index" value="${schedule_index + 1}" />
+                                        </c:forEach>
                                     </select>
                                     <div class="validation"></div>
                                 </div>
                                 <div class="form-group">
-                                    <p>Điểm lên xe <span>*</span></p><span class="icon-case"><i class="fa fa-map-marker"></i></span>
-                                    <select class="form-control">
-                                        <option value="" label="VP Long Xuyên: 392 Phạm Cự Lượng, Khóm Tân Phú, Phường Mỹ Quý, Tp Long Xuyên">VP Long Xuyên: 392 Phạm Cự Lượng, Khóm Tân Phú, Phường Mỹ Quý, Tp Long Xuyên</option>
-                                        <option value="" label="VP Lộ Tẻ: Ấp Bình Phú 1, Xã Bình Hòa, Châu Thành An Giang">VP Lộ Tẻ: Ấp Bình Phú 1, Xã Bình Hòa, Châu Thành An Giang</option>
-                                    </select>
+                                    <p>Điểm lên xe <span>*</span></p>
+                                    <textarea name="" id="" cols="45" rows="10" readonly class="form-control" style="background-color: white">${sessionScope.departure_station_address}</textarea>
+                                    <div class="validation"></div>
+                                </div>
+                                <div class="form-group">
+                                    <p>Điểm xuống xe <span>*</span></p>
+                                    <textarea name="" id="" cols="45" rows="10" readonly class="form-control" style="background-color: white">${sessionScope.destination_station_address}</textarea>
                                     <div class="validation"></div>
                                 </div>
                             </div>
@@ -98,14 +114,14 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <p> <i class="fa fa-bus text-primary"></i> <strong>Xuất phát</strong> </p> <span>14-04-2018</span>
-                                            <br> <span>05:00</span> </td>
+                                            <p> <i class="fa fa-bus text-primary"></i> <strong>Xuất phát</strong> </p> <span>${sessionScope.start_date_format}</span>
+                                            <br> <span>${sessionScope.start_time_string}</span> </td>
                                         <td class="time-line">
                                             <div class="first"></div>
                                         </td>
                                         <td>
                                             <p>&nbsp;</p>
-                                            <p> Châu Đốc
+                                            <p> ${sessionScope.departure_city_name}
                                                 <br> </p>
                                         </td>
                                     </tr>
@@ -127,7 +143,7 @@
                                         </td>
                                         <td>
                                             <p>&nbsp;</p>
-                                            <p> Cần Thơ
+                                            <p> ${sessionScope.destination_city_name}
                                                 <br> </p>
                                         </td>
                                     </tr>
@@ -359,6 +375,15 @@
             <!-- Bootstrap core JavaScript -->
             <script src="vendor/jquery/jquery.min.js"></script>
             <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+            <script>
+                                            function handleSelectLine(element)
+                                            {
+                                                window.location = "/TravelCoachBookingTicket/ticket_2?button_action=select_line&line_id=" + element.value;
+                                            }
+                                            function handleSelectStartTime(element) {
+                                                window.location = "/TravelCoachBookingTicket/ticket_2?button_action=select_start_time&schedule_index=" + element.value;
+                                            }
+            </script>
     </body>
 
 </html>

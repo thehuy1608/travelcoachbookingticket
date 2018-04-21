@@ -16,7 +16,8 @@ import java.util.logging.Logger;
  * @author User
  */
 public class DateToString {
-    public static String convert_date_to_string(Date date)  {
+
+    public static String convert_date_to_string(Date date) {
         String date_string = null;
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
         try {
@@ -25,10 +26,20 @@ public class DateToString {
         }
         return date_string;
     }
-    
-    public static String convert_date_time_to_string(Date date)  {
+
+    public static String convert_date_time_to_string(Date date) {
         String date_string = null;
         SimpleDateFormat format = new SimpleDateFormat("HH:mm dd-MM-yyyy");
+        try {
+            date_string = format.format(date);
+        } catch (Exception e) {
+        }
+        return date_string;
+    }
+
+    public static String convert_time_to_string(Date date) {
+        String date_string = null;
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
         try {
             date_string = format.format(date);
         } catch (Exception e) {

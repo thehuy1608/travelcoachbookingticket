@@ -14,15 +14,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import model.api.date.DateToString;
+import model.database.dao.LineDAO;
+import model.database.dao.ScheduleDAO;
+import model.database.pojo.Line;
+import model.database.pojo.Schedule;
 
 /**
  *
  * @author User
  */
-public class Controller_index extends HttpServlet {
+public class Controller_ticket_2 extends HttpServlet {
 
     private static final String HOME = "index.jsp";
     private static final String TICKET_1 = "ticket-1.jsp";
+    private static final String TICKET_2 = "ticket-2.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,9 +45,36 @@ public class Controller_index extends HttpServlet {
         HttpSession session = request.getSession();
         try (PrintWriter out = response.getWriter()) {
             String button_action = request.getParameter("button_action");
-            if (button_action.equals("booking")) {
-                RequestDispatcher rd = request.getRequestDispatcher(TICKET_1);
-                rd.forward(request, response);
+            switch (button_action) {
+                case "select_line": {
+                    int line_id = Integer.parseInt(request.getParameter("line_id"));
+                    String start_date_string = (String) session.getAttribute("start_date");
+
+                    List<Schedule> schedule_list = ScheduleDAO.get_schedule_list_by_line_id_and_start_date_string(line_id, start_date_string);
+
+                    Line line = LineDAO.get_line_by_line_id(line_id);
+                    String departure_station_address = line.getStationByDepartureStationId().getStationAddress();
+                    String destination_station_address =line.getStationByDestinationStationId().getStationAddress();
+
+                    session.setAttribute("departure_station_address", departure_station_address);
+                    session.setAttribute("destination_station_address", destination_station_address);
+                    session.setAttribute("schedule_list", schedule_list);
+                    session.setAttribute("line_id", line_id);
+
+                    RequestDispatcher rd = request.getRequestDispatcher(TICKET_2);
+                    rd.forward(request, response);
+                    break;
+                }
+                case "select_start_time": {
+                    int schedule_index = Integer.parseInt(request.getParameter("schedule_index"));
+                    List<Schedule> schedule_list = (List<Schedule>) session.getAttribute("schedule_list");
+                    Schedule schedule = schedule_list.get(schedule_index);
+                    
+                    session.setAttribute("start_time_string", DateToString.convert_time_to_string(schedule.getStartTime()));
+                    request.setAttribute("selected_schedule_index", schedule_index);
+                    RequestDispatcher rd = request.getRequestDispatcher(TICKET_2);
+                    rd.forward(request, response);
+                }
             }
         }
     }

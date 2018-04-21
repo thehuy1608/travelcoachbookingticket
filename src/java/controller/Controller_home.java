@@ -14,12 +14,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import model.database.dao.CityOrDistrictDAO;
 
 /**
  *
  * @author User
  */
-public class Controller_index extends HttpServlet {
+public class Controller_home extends HttpServlet {
 
     private static final String HOME = "index.jsp";
     private static final String TICKET_1 = "ticket-1.jsp";
@@ -38,11 +39,10 @@ public class Controller_index extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         try (PrintWriter out = response.getWriter()) {
-            String button_action = request.getParameter("button_action");
-            if (button_action.equals("booking")) {
-                RequestDispatcher rd = request.getRequestDispatcher(TICKET_1);
-                rd.forward(request, response);
-            }
+            List<String> departure_city_or_district_name_list = CityOrDistrictDAO.get_city_or_district_name_list();
+            session.setAttribute("departure_city_or_district_name_list", departure_city_or_district_name_list);
+            RequestDispatcher rd = request.getRequestDispatcher(HOME);
+            rd.forward(request, response);
         }
     }
 

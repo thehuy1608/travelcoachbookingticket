@@ -269,15 +269,15 @@ public class LineDAO {
         return line;
     }
     
-    public static List<Line> get_line_list_by_trip_id_list(List<Integer> trip_id_list) {
-        List<Line> line_list = new ArrayList<>();
+    public static List<Integer> get_line_id_list_by_trip_id_list(List<Integer> trip_id_list) {
+        List<Integer> line_id_list = new ArrayList<>();
         trip_id_list.forEach(trip_id -> {
-            Line line = TripDAO.get_trip_by_trip_id(trip_id).getLine();
-            if (!line_list.contains(line)) {
-                line_list.add(line);
+            int line_id = TripDAO.get_trip_by_trip_id(trip_id).getLine().getLineId();
+            if (!line_id_list.contains(line_id)) {
+                line_id_list.add(line_id);
             }
         });
-        return line_list;
+        return line_id_list;
     }
 
     /**
@@ -285,45 +285,12 @@ public class LineDAO {
      * @param args
      */
     public static void main(String[] args) {
-//        Station departure_station = StationDAO.get_station_by_station_id(3);
-//        Station destination_station = StationDAO.get_station_by_station_id(9);
-//        List<Line> line_list = get_all_line_by_departure_and_destination_station(departure_station, destination_station);
-//        line_list.forEach((line) -> {
-//            System.out.println(line.getLineName());
-//        });
-
-//        List<Line> line_list = get_all_line_by_departure_and_destination_station_id(3, 9);
-//        line_list.forEach((line) -> {
-//            System.out.println(line.getLineName());
-//        });
-//        Cityordistrict departure_city = CityOrDistrictDAO.get_city_or_district_by_id(3);
-//        Cityordistrict destination_city = CityOrDistrictDAO.get_city_or_district_by_id(9);
-//        List<Line> line_list = get_all_line_by_departure_and_destination_cityordistrict(departure_city, destination_city);
-//        line_list.forEach((line) -> {
-//            System.out.println(line.getLineName());
-//        });
-//        List<Line> line_list = get_all_line_by_departure_and_destination_cityordistrict_id(3, 9);
-//        line_list.forEach((line) -> {
-//            System.out.println(line.getLineName());
-//        });
-//        Station departure_station = StationDAO.get_station_by_station_id(33);
-//        List<Line> line_list = get_all_line_by_departure_station(departure_station);
-//        line_list.forEach((line) -> {
-//            System.out.println(line.getLineName());
-//        });
-//        List<Line> line_list = get_all_line_by_departure_station_id(33);
-//        line_list.forEach((line) -> {
-//            System.out.println(line.getLineName());
-//        });
-//        Station destination_station = StationDAO.get_station_by_station_id(33);
-//        List<Line> line_list = get_all_line_by_destination_station(destination_station);
-//        line_list.forEach((line) -> {
-//            System.out.println(line.getLineName());
-////        });
-//        List<Line> line_list = get_all_line_by_destination_station_id(33);
-//        line_list.forEach((line) -> {
-//            System.out.println(line.getLineName());
-//        });
-        
+        List<Integer> trip_id_list = new ArrayList<>();
+        trip_id_list.add(4);
+        trip_id_list.add(11);
+        List<Integer> line_list = get_line_id_list_by_trip_id_list(trip_id_list);
+        line_list.forEach(line -> {
+            System.out.println(line);
+        });
     }
 }

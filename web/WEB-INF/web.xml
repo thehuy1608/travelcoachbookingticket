@@ -4,9 +4,33 @@
         <servlet-name>Controller_index</servlet-name>
         <servlet-class>controller.Controller_index</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Controller_home</servlet-name>
+        <servlet-class>controller.Controller_home</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Controller_ticket_1</servlet-name>
+        <servlet-class>controller.Controller_ticket_1</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Controller_ticket_2</servlet-name>
+        <servlet-class>controller.Controller_ticket_2</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Controller_index</servlet-name>
+        <url-pattern>/index</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Controller_home</servlet-name>
         <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Controller_ticket_1</servlet-name>
+        <url-pattern>/ticket_1</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Controller_ticket_2</servlet-name>
+        <url-pattern>/ticket_2</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -14,6 +38,6 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>ticket-1.jsp</welcome-file>
+        <welcome-file>home</welcome-file>
     </welcome-file-list>
 </web-app>

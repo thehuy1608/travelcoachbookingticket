@@ -5,8 +5,9 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -19,7 +20,8 @@
         <!-- Custom styles for this template -->
         <link href="css/small-business.css" rel="stylesheet">
         <link href="css/hover.css" rel="stylesheet">
-        <link href="css/fontawesome-all.css" rel="stylesheet"> </head>
+        <link href="css/fontawesome-all.css" rel="stylesheet"> 
+    </head>
 
     <body>
         <!-- Navigation -->
@@ -52,64 +54,44 @@
             <!-- Heading Row -->
             <div class="row my-4">
                 <div class="col-lg-6">
-                    <form>
+                    <form action="ticket_1" method="post">
                         <h1>Thông tin mua vé:</h1>
                         <div class="contentform">
                             <div class="leftcontact">
                                 <div class="form-group">
+                                    <c:set var="selected_departure_city_index" value="${sessionScope.selected_departure_city_index}"/>
+                                    <c:set var="index" value="${0}" />
                                     <p>Điểm khởi hành <span>*</span></p><span class="icon-case"><i class="fa fa-bus"></i></span>
-                                    <select name="idOrigin" id="idOrigin" class="form-control selectpicker bs-select-hidden">
-                                        <option value="ANGIANG">An Giang (Châu Đốc,Long Xuyên) </option>
-                                        <option value="BUONMATHUOT">Buôn Ma Thuột</option>
-                                        <option value="BINHMINH">Bình Minh</option>
-                                        <option value="BINHDINH">Bình Định</option>
-                                        <option value="BACLIEU">Bạc Liêu</option>
-                                        <option value="BAOLOC">Bảo Lộc</option>
-                                        <option value="BENTRE">Bến Tre</option>
-                                        <option value="CAMRANH">Cam Ranh</option>
-                                        <option value="CAOLANH">Cao Lãnh</option>
-                                        <option value="CHAUDOC">Châu Đốc</option>
-                                        <option value="CAMAU">Cà Mau</option>
-                                        <option value="CANTHO">Cần Thơ</option>
-                                        <option value="HUE">Huế</option>
-                                        <option value="HANOI">Hà Nội</option>
-                                        <option value="HATIEN">Hà Tiên</option>
-                                        <option value="HAUGIANG">Hậu Giang</option>
-                                        <option value="HONGNGU">Hồng Ngự</option>
-                                        <option value="KIENGIANG">Kiên Giang</option>
-                                        <option value="LONGXUYEN">Long Xuyên</option>
-                                        <option value="LAMDONG">Lâm Đồng</option>
-                                        <option value="MUINE">Mũi Né</option>
-                                        <option value="NAMDINH">Nam Định</option>
-                                        <option value="NHATRANG">Nha Trang</option>
-                                        <option value="NINHHOA">Ninh Hòa</option>
-                                        <option value="NAMCAN">Năm Căn</option>
-                                        <option value="PHANTHIET">Phan Thiết</option>
-                                        <option value="PHUYEN">Phú Yên</option>
-                                        <option value="QUINHON">Qui Nhơn</option>
-                                        <option value="QUANGNGAI">Quảng Ngãi</option>
-                                        <option value="RACHGIA">Rạch Giá</option>
-                                        <option value="SADEC">Sa Đéc</option>
-                                        <option value="SOCTRANG">Sóc Trăng</option>
-                                        <option value="TPHCM">TP.Hồ Chí Minh</option>
-                                        <option value="THOTNOT">Thốt Nốt</option>
-                                        <option value="TRAVINH">Trà Vinh</option>
-                                        <option value="TUYHOA">Tuy Hòa</option>
-                                        <option value="VINHLONG">Vĩnh Long</option>
-                                        <option value="VUNGTAU">Vũng Tàu</option>
-                                        <option value="VITHANH">Vị Thanh</option>
-                                        <option value="DALAT">Đà Lạt</option>
-                                        <option value="DANANG">Đà Nẵng</option>
-                                        <option value="DAINGAI">Đại Ngãi</option>
-                                        <option value="DAKLAK">Đắk Lắk</option>
-                                        <option value="DAKNONG">Đắk Nông</option>
-                                        <option value="DONGTHAP">Đồng Tháp</option>
+                                    <select  id="origin" class="form-control selectpicker bs-select-hidden" name="departure_city_index" onchange="javascript:handleSelectDepartureCity(this)" required>
+                                        <option value="" disabled selected>&nbsp;</option>
+                                        <c:forEach items="${sessionScope.departure_city_or_district_name_list}" var="departure_city_or_district_name">
+                                            <c:choose>
+                                                <c:when test="${selected_departure_city_index != null}">
+                                                    <c:if test="${selected_departure_city_index == index}">
+                                                        <option value="${index }" selected>
+                                                            ${departure_city_or_district_name}
+                                                        </option>
+                                                    </c:if>
+                                                    <c:if test="${selected_departure_city_index != index}">
+                                                        <option value="${index }">
+                                                            ${departure_city_or_district_name}
+                                                        </option>
+                                                    </c:if>
+                                                </c:when>
+                                                <c:when test="${selected_departure_city_name == null}">
+                                                    <option value="${index}">
+                                                        ${departure_city_or_district_name}
+                                                    </option>
+                                                </c:when>
+                                            </c:choose>
+                                            <c:set var="index" value="${index + 1}" />
+                                        </c:forEach>
                                     </select>
                                     <div class="validation"></div>
                                 </div>
                                 <div class="form-group">
                                     <p>Ngày khởi hành <span>*</span></p><span class="icon-case"><i class="fa fa-calendar-alt"></i></span>
-                                    <input type="date" name="prenom" id="prenom" data-rule="required" />
+                                    <input type="date" name="start_date" id="start_date" data-rule="required" required/>
                                     <div class="validation"></div>
                                 </div>
                             </div>
@@ -117,8 +99,14 @@
                                 <div class="form-group">
                                     <p>Điểm đến <span>*</span></p><span class="icon-case"><i class="fa fa-bus"></i></span>
                                     <div class="controls">
-                                        <select name="idDest" id="idDest" class="form-control  selectpicker bs-select-hidden">
-                                            <option value="TPHCM">TP.Hồ Chí Minh</option>
+                                        <c:set var="index1" value="${0}" />
+                                        <select name="destination_city_index" id="idDest" class="form-control  selectpicker bs-select-hidden" required>
+                                            <c:forEach items="${sessionScope.destination_city_or_district_name_list}" var="destination_city_or_district_name">
+                                                <option value="${index1}">
+                                                    ${destination_city_or_district_name}
+                                                </option>
+                                                <c:set var="index1" value="${index1 + 1}" />
+                                            </c:forEach>
                                         </select>
                                     </div>
                                     <div class="validation"></div>
@@ -127,7 +115,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="bouton-contact"><i class="fa fa-ticket-alt icon-flat"></i>Đặt mua</button>
+                        <button type="submit" name="button_action" value="find_trip" class="bouton-contact"><i class="fa fa-ticket-alt icon-flat"></i>Đặt mua</button>
                     </form>
                 </div>
                 <!-- /.col-lg-8 -->
@@ -155,5 +143,26 @@
             <script src="vendor/jquery/jquery.min.js"></script>
             <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     </body>
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+                            function handleSelectDepartureCity(element)
+                            {
+                                window.location = "/TravelCoachBookingTicket/ticket_1?button_action=select_departure_city&departure_city_index=" + element.value;
+                            }
+                            var today = new Date();
+                            var dd = today.getDate() + 1;
+                            var mm = today.getMonth() + 1; //January is 0!
+                            var yyyy = today.getFullYear();
+                            if (dd < 10) {
+                                dd = 1 + dd;
+                            }
+                            if (mm < 10) {
+                                mm = '0' + mm;
+                            }
+
+                            today = yyyy + '-' + mm + '-' + dd;
+                            document.getElementById("start_date").setAttribute("min", today);
+    </script>
 
 </html>

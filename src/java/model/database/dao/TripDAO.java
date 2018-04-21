@@ -7,13 +7,14 @@ package model.database.dao;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.api.date.StringToDate;
 import model.database.hibernate.HibernateUtil;
-import model.database.pojo.Line;
+import model.database.pojo.*;
 import model.database.pojo.Trip;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -201,10 +202,40 @@ public class TripDAO {
         return trip_list;
     }
 
-    public static void main(String[] args) {
-        List<Trip> trip_list = get_trip_list_by_line_id_and_start_date_string(2221, "2018-07-12");
+    public static List<Trip> get_trip_list_by_departure_city_name(String departure_city_name) {
+        List<Trip> trip_list = null;
+        Session hibernate_session = HibernateUtil.getSessionFactory().openSession();
+        hibernate_session.beginTransaction();
+        try {
+            String hql = "SELECT trip FROM Trip trip WHERE trip.line.stationByDepartureStationId.cityordistrict.cityOrDistrictName=:departure_city_name";
+            Query query = hibernate_session.createQuery(hql);
+            query.setParameter("departure_city_name", departure_city_name);
+            trip_list = query.list();
+        } catch (Exception e) {
+            hibernate_session.flush();
+            hibernate_session.close();
+        }
+        hibernate_session.flush();
+        hibernate_session.close();
+        return trip_list;
+    }
+
+    public static List<String> get_destination_city_name_list_by_departure_city_name(String departure_city_name) {
+        List<String> destination_city_name_list = new ArrayList<>();
+        List<Trip> trip_list = get_trip_list_by_departure_city_name(departure_city_name);
         trip_list.forEach(trip -> {
-            System.out.println(trip.getTripId());
+            String destination_city_name = trip.getLine().getStationByDestinationStationId().getCityordistrict().getCityOrDistrictName();
+            if (!destination_city_name_list.contains(destination_city_name)) {
+                destination_city_name_list.add(destination_city_name);
+            }
+        });
+        return destination_city_name_list;
+    }
+
+    public static void main(String[] args) {
+        List<String> list = get_destination_city_name_list_by_departure_city_name("Thành phố Hồ Chí Minh");
+        list.forEach(item -> {
+            System.out.println(item);
         });
     }
 }
