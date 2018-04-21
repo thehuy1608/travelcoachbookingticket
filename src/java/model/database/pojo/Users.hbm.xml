@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 19, 2018 11:52:08 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="model.database.pojo.Users" table="users" catalog="travel_coach_ticketing" optimistic-lock="version" lazy="false">
+        <id name="userId" type="java.lang.Integer">
+            <column name="UserID" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="role" class="model.database.pojo.Role" fetch="select">
+            <column name="FK_RoleID" not-null="true" />
+        </many-to-one>
+        <property name="isGoogleLogin" type="byte">
+            <column name="IsGoogleLogin" not-null="true" />
+        </property>
+        <property name="isFacebookLogin" type="byte">
+            <column name="IsFacebookLogin" not-null="true" />
+        </property>
+        <property name="modifiedDate" type="date">
+            <column name="ModifiedDate" length="10" not-null="true" />
+        </property>
+        <one-to-one name="logininfo" class="model.database.pojo.Logininfo"></one-to-one>
+        <one-to-one name="userinfo" class="model.database.pojo.Userinfo"></one-to-one>
+    </class>
+</hibernate-mapping>
