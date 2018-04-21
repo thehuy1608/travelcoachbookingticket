@@ -1,12 +1,12 @@
 <%-- 
-    Document   : ticket-3
-    Created on : Apr 21, 2018, 9:51:10 AM
+    Document   : ticket-4
+    Created on : Apr 21, 2018, 9:51:16 AM
     Author     : User
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -45,68 +45,75 @@
                 <ul class="list-step clearfix">
                     <li>Chọn tuyến <span></span> </li>
                     <li>Chọn ghế <span></span></li>
-                    <li class="active first">Thông tin khách hàng <span></span></li>
-                    <li>Thanh toán <span></span></li>
+                    <li class="active first">Thanh toán <span></span></li>
                 </ul>
             </div>
             <!-- Heading Row -->
-            <div class="row my-4">
-                <div class="col-lg-6">
-                    <form>
-                        <h1>Thông tin mua vé:</h1>
+            <div class="row justify-content-center">
+                <div class="col-sm"></div>
+                <div class="col-10">
+                    <form action="ticket_3" method="post">
+                        <h1>Thông tin hóa đơn:</h1>
                         <div class="contentform">
                             <div class="form-group">
                                 <p>Họ và tên <span>*</span></p>
-                                <input type="text" name="prenom" id="prenom" data-rule="required" class="info-customer-name" />
-                                <div class="validation"></div>
-                            </div>
-                            <div class="leftcontact">
-                                <div class="form-group">
-                                    <p>Email</p>
-                                    <input type="text" name="prenom" id="prenom" data-rule="required" class="info-customer" />
-                                    <div class="validation"></div>
+                                <input type="text" name="customer_name" id="" class="info-payment" required/> </div>
+                            <div class="form-group">
+                                <p>Số điện thoại <span>*</span></p>
+                                <input type="text" name="customer_phone_number" id="" class="info-payment" required/> </div>
+                            <div class="form-group">
+                                <p>Chuyến đi <span></span></p>
+                                <input type="text" name="" id="" class="info-payment" value="${sessionScope.trip_name}" disabled/> </div>
+                            <div class="form-group">
+                                <p>Trạm khởi hành <span></span></p>
+                                <input type="text" name="" id="" class="info-payment" value="${sessionScope.departure_station}" disabled/> </div>
+                            <div class="form-group">
+                                <p>Trạm kết thúc <span></span></p>
+                                <input type="text" name="" id="" class="info-payment" value="${sessionScope.destination_station}" disabled/> </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-ms-12">
+                                        <p>Ngày khởi hành <span><i class="fa fa-calendar-alt"></i></span></p>
+                                        <input type="text" name="" id="" value="${sessionScope.start_date_string}" class="info-payment" disabled/> </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-ms-12">
+                                        <p>Giờ khởi hành <span><i class="fa fa-clock"></i></span></p>
+                                        <input type="text" name="" id="" class="info-payment" value="${sessionScope.start_time_string}" disabled/> </div>
                                 </div>
-                                <div class="form-group">
-                                    <p>Di động <span>*</span></p>
-                                    <input type="text" name="prenom" id="prenom" data-rule="required" class="info-customer" />
-                                    <div class="validation"></div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-ms-12">
+                                        <p>Ngày đến <span><i class="fa fa-calendar-alt"></i></span></p>
+                                        <input type="text" name="" id="" value="${sessionScope.end_date_string}" class="info-payment" disabled/> </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-ms-12">
+                                        <p>Giờ đến <span><i class="fa fa-clock"></i></span></p>
+                                        <input type="text" name="" id="" class="info-payment" value="${sessionScope.end_time_string}" disabled/> </div>
                                 </div>
-                            </div>
-                            <div class="rightcontact">
-                                <div class="form-group">
-                                    <p>Ngày sinh</p>
-                                    <input type="date" name="prenom" id="prenom" data-rule="required" class="info-customer" placeholder="dd/mm/yyyy" />
-                                    <div class="validation"></div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-ms-12">
+                                        <p>Số vé đã đặt <span><i class="fa fa-ticket-alt"></i></span></p>
+                                        <input type="text" name="" id="" class="info-payment" value="${sessionScope.number_of_tickets}" disabled/> </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-ms-12">
+                                        <p>Vị trí ngồi <span></span></p>
+                                        <input type="text" name="" id="" class="info-payment" value="${sessionScope.chosen_seat_numbers_string}" disabled/> </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-ms-12">
+                                        <p>Giá vé <span><i class="fa fa-money-bill-alt"></i></span></p>
+                                        <input type="text" name="" id="" class="info-payment" value="${sessionScope.ticket_price}" disabled/> </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-ms-12">
+                                        <p>Tổng tiền thanh toán <span></span></p>
+                                        <input type="text" name="" id="" class="info-payment" value="${sessionScope.total_price}" disabled/> </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group" style="height: 50px">
-                            <div class="form-section">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-ms-12" style="height: 0px"> <a class="btn btn-primary btn-flat" style="color: white;margin-left: 18px"><i class="fa fa-arrow-left icon-flat bg-btn-actived" ></i> Quay lại</a>
-                                    <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-arrow-right icon-flat "></i>Tiếp tục</button>
-                                </div>
-                            </div> 
+                        <div class="form-section">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-ms-12"> <a class="btn btn-primary btn-flat" style="color: white;margin-left: 20px"><i class="fa fa-arrow-left icon-flat bg-btn-actived" ></i> Quay lại</a>
+                                <button type="submit" class="btn btn-success btn-flat" name="button_action" value="order"><i class="fa fa-arrow-right icon-flat "></i>Đặt vé</button>
+                            </div>
                         </div>
-
                     </form>
                 </div>
                 <!-- /.col-lg-8 -->
-                <div class="col-lg-6 result-panel">
-                    <h1 class="title-name">Điều khoản và lưu ý</h1>
-                    <div class="row mg-t10 row-content">
-                        <div class="panel" style="min-height: 390px; user-select: text;">
-                            <div style="user-select: text;">
-                                <p class="text-justify" style="user-select: text;">(*) Quý khách vui lòng mang email có chứa mã vé đến văn phòng để đổi vé lên xe trước giờ xuất bến ít nhất <strong class="text-primary">60 phút</strong> để chúng tôi trung chuyển.</p>
-                                <p class="text-justify">(*) Thông tin hành khách phải chính xác, nếu không sẽ không thể lên xe hoặc hủy/đổi vé</p>
-                                <p class="text-justify">(*) Quý khách không được đổi / trả vé vào các ngày Lễ Tết ( ngày thường quý khách được quyền chuyển đổi hoặc hủy vé <strong class="text-primary">một lần</strong> duy nhất trước giờ xe chạy 24 giờ), phí hủy vé 10%. </p>
-                                <p class="text-justify" style="user-select: text;">(*) Nếu quý khách có nhu cầu trung chuyển, vui lòng liên hệ số điện thoại
-                                    <strong class="text-primary" style="font-size: 1.2em;">1900 6067</strong> 
-                                    trước khi đặt vé. Chúng tôi sẽ không đón/ trung chuyển tại những điểm xe trung chuyển không thể tới được.
-                                </p>
-                            </div>
-
-                        </div>
-                    </div>
+                <div class="col-sm">
                     <!-- /.col-md-4 -->
                 </div>
                 <!-- /.row -->

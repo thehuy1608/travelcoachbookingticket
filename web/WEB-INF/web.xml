@@ -16,6 +16,10 @@
         <servlet-name>Controller_ticket_2</servlet-name>
         <servlet-class>controller.Controller_ticket_2</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Controller_ticket_3</servlet-name>
+        <servlet-class>controller.Controller_ticket_3</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Controller_index</servlet-name>
         <url-pattern>/index</url-pattern>
@@ -31,6 +35,10 @@
     <servlet-mapping>
         <servlet-name>Controller_ticket_2</servlet-name>
         <url-pattern>/ticket_2</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Controller_ticket_3</servlet-name>
+        <url-pattern>/ticket_3</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -15,10 +15,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.api.date.DateToString;
+import model.database.dao.CoachDriverTripDAO;
 import model.database.dao.LineDAO;
 import model.database.dao.ScheduleDAO;
+import model.database.dao.SeatDAO;
+import model.database.pojo.CoachDriverTrip;
 import model.database.pojo.Line;
 import model.database.pojo.Schedule;
+import model.database.pojo.Trip;
 
 /**
  *
@@ -29,6 +33,7 @@ public class Controller_ticket_2 extends HttpServlet {
     private static final String HOME = "index.jsp";
     private static final String TICKET_1 = "ticket-1.jsp";
     private static final String TICKET_2 = "ticket-2.jsp";
+    private static final String TICKET_3 = "ticket-3.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -54,12 +59,18 @@ public class Controller_ticket_2 extends HttpServlet {
 
                     Line line = LineDAO.get_line_by_line_id(line_id);
                     String departure_station_address = line.getStationByDepartureStationId().getStationAddress();
-                    String destination_station_address =line.getStationByDestinationStationId().getStationAddress();
+                    String destination_station_address = line.getStationByDestinationStationId().getStationAddress();
 
                     session.setAttribute("departure_station_address", departure_station_address);
                     session.setAttribute("destination_station_address", destination_station_address);
                     session.setAttribute("schedule_list", schedule_list);
                     session.setAttribute("line_id", line_id);
+
+                    for (int i = 1; i <= 45; i++) {
+                        String prefix = "seat_status_";
+                        String param = prefix + i;
+                        session.setAttribute(param, false);
+                    }
 
                     RequestDispatcher rd = request.getRequestDispatcher(TICKET_2);
                     rd.forward(request, response);
@@ -69,9 +80,28 @@ public class Controller_ticket_2 extends HttpServlet {
                     int schedule_index = Integer.parseInt(request.getParameter("schedule_index"));
                     List<Schedule> schedule_list = (List<Schedule>) session.getAttribute("schedule_list");
                     Schedule schedule = schedule_list.get(schedule_index);
-                    
+                    Trip trip = schedule.getTrip();
+                    CoachDriverTrip cdt = CoachDriverTripDAO.get_coach_driver_trip_by_trip(trip);
+                    int coach_id = cdt.getCoach().getCoachId();
+
+                    //Reset seat state
+                    for (int i = 1; i <= 45; i++) {
+                        String prefix = "seat_status_";
+                        String param = prefix + i;
+                        session.setAttribute(param, false);
+                    }
+
+                    List<Byte> selected_seat_list = SeatDAO.get_all_selected_seat_of_trip_by_coach_id(coach_id);
+                    selected_seat_list.forEach(selected_seat -> {
+                        String prefix = "seat_status_";
+                        String param = prefix + selected_seat;
+                        session.setAttribute(param, true);
+                    });
+
                     session.setAttribute("start_time_string", DateToString.convert_time_to_string(schedule.getStartTime()));
-                    request.setAttribute("selected_schedule_index", schedule_index);
+                    session.setAttribute("selected_schedule_index", schedule_index);
+                    session.setAttribute("trip", trip);
+                    session.setAttribute("coach_id", coach_id);
                     RequestDispatcher rd = request.getRequestDispatcher(TICKET_2);
                     rd.forward(request, response);
                 }

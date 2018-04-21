@@ -5,6 +5,7 @@
  */
 package model.database.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import model.database.hibernate.HibernateUtil;
 import model.database.pojo.Seat;
@@ -69,6 +70,15 @@ public class SeatDAO {
         hibernate_session.flush();
         hibernate_session.close();
         return selected_seat_list;
+    }
+       
+    public static List<Seat> get_seat_list_by_list_seat_number_list_and_coach_id(int coach_id, List<Byte> seat_number_list) {
+        List<Seat> seat_list = new ArrayList<>();
+        seat_number_list.forEach(seat_number -> {
+            Seat seat = get_seat_by_coach_id_and_seat_number(coach_id, seat_number);
+            seat_list.add(seat);
+        });
+        return seat_list;
     }
 
     /**

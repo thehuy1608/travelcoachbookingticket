@@ -31,6 +31,7 @@ public class Controller_ticket_1 extends HttpServlet {
     private static final String HOME = "index.jsp";
     private static final String TICKET_1 = "ticket-1.jsp";
     private static final String TICKET_2 = "ticket-2.jsp";
+    private static final String TICKET_3 = "ticket-3.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -100,6 +101,12 @@ public class Controller_ticket_1 extends HttpServlet {
                     session.setAttribute("departure_city_name", departure_city_name);
                     session.setAttribute("destination_city_name", destination_city_name);
                     session.setAttribute("start_date_format", start_date_format);
+
+                    for (int i = 1; i <= 45; i++) {
+                        String prefix = "seat_status_";
+                        String param = prefix + i;
+                        session.setAttribute(param, false);
+                    }
 
                     RequestDispatcher rd = request.getRequestDispatcher(TICKET_2);
                     rd.forward(request, response);

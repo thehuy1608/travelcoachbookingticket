@@ -47,7 +47,6 @@
                 <ul class="list-step clearfix">
                     <li class="active first">Chọn tuyến <span></span> </li>
                     <li>Chọn ghế <span></span></li>
-                    <li>Thông tin khách hàng <span></span></li>
                     <li>Thanh toán <span></span></li>
                 </ul>
             </div>
