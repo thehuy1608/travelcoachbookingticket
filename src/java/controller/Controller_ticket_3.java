@@ -24,6 +24,7 @@ import model.database.dao.InvoicelineitemDAO;
 import model.database.dao.LineDAO;
 import model.database.dao.SeatDAO;
 import model.database.dao.TicketDAO;
+import model.database.hibernate.HibernateUtil;
 import model.database.pojo.Customer;
 import model.database.pojo.Invoice;
 import model.database.pojo.Invoicelineitem;
@@ -32,6 +33,7 @@ import model.database.pojo.Schedule;
 import model.database.pojo.Seat;
 import model.database.pojo.Ticket;
 import model.database.pojo.Trip;
+import org.hibernate.Session;
 
 /**
  *
@@ -100,8 +102,8 @@ public class Controller_ticket_3 extends HttpServlet {
                     session.setAttribute("chosen_seat_numbers_string", chosen_seat_numbers_string);
                     session.setAttribute("ticket_price", ticket_price);
                     session.setAttribute("total_price", total_price);
-                    
-                     int coach_id = (int) session.getAttribute("coach_id");
+
+                    int coach_id = (int) session.getAttribute("coach_id");
                     List<Seat> selected_seat_list = SeatDAO.get_seat_list_by_list_seat_number_list_and_coach_id(coach_id, chosen_seat_numbers);
                     session.setAttribute("selected_seat_list", selected_seat_list);
 
@@ -121,19 +123,19 @@ public class Controller_ticket_3 extends HttpServlet {
                     int seat_exception;
                     int index = -1;
                     List<Seat> selected_seat_list = (List<Seat>) session.getAttribute("selected_seat_list");
+                    Session hibernate_session = HibernateUtil.getSessionFactory().openSession();
                     for (Seat seat : selected_seat_list) {
                         seat_exception = seat.getSeatNumber();
                         index += 1;
                         byte seat_status = 1;
                         seat.setSeatStatus(seat_status);
                         try {
-                            SeatDAO.update_seat(seat);
+                            hibernate_session.beginTransaction();
+                            hibernate_session.saveOrUpdate(seat);
+                            hibernate_session.getTransaction().commit();
                         } catch (Exception e) {
-                            for (int i = 0; i < index; i++) {
-                                Seat roll_back_seat = selected_seat_list.get(i);
-                                byte roll_back_seat_status = 0;
-                                roll_back_seat.setSeatStatus(roll_back_seat_status);
-                                SeatDAO.update_seat(roll_back_seat);
+                            if (hibernate_session.getTransaction().isActive()) {
+                                hibernate_session.getTransaction().rollback();
                             }
                             request.setAttribute("is_success_invoice", false);
                             request.setAttribute("error_message", seat_exception);
@@ -141,6 +143,8 @@ public class Controller_ticket_3 extends HttpServlet {
                             rd.forward(request, response);
                         }
                     }
+                    hibernate_session.flush();
+                    hibernate_session.close();
 
                     Invoice invoice = new Invoice(trip, invoiceDueDate, total_price, modifiedDate, invoiceStatus, invoiceAddedDate);
                     InvoiceDAO.add_invoice(invoice);
@@ -153,9 +157,28 @@ public class Controller_ticket_3 extends HttpServlet {
                     String customer_phone_number = request.getParameter("customer_phone_number");
                     Customer customer = new Customer(invoice, customer_name, customer_phone_number, GetCurrentDate.get_current_date());
                     CustomerDAO.add_customer(customer);
-                    
+
                     request.setAttribute("is_success_invoice", true);
                     RequestDispatcher rd = request.getRequestDispatcher("success.jsp");
+                    rd.forward(request, response);
+                    break;
+                }
+                case "choose_another_seat": {
+                    int coach_id = (int) session.getAttribute("coach_id");
+                    //Reset seat state
+                    for (int i = 1; i <= 45; i++) {
+                        String prefix = "seat_status_";
+                        String param = prefix + i;
+                        session.setAttribute(param, false);
+                    }
+
+                    List<Byte> selected_seat_list = SeatDAO.get_all_selected_seat_of_trip_by_coach_id(coach_id);
+                    selected_seat_list.forEach(selected_seat -> {
+                        String prefix = "seat_status_";
+                        String param = prefix + selected_seat;
+                        session.setAttribute(param, true);
+                    });
+                    RequestDispatcher rd = request.getRequestDispatcher(TICKET_2);
                     rd.forward(request, response);
                     break;
                 }

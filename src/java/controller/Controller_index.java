@@ -42,6 +42,10 @@ public class Controller_index extends HttpServlet {
             if (button_action.equals("booking")) {
                 RequestDispatcher rd = request.getRequestDispatcher(TICKET_1);
                 rd.forward(request, response);
+            } else if (button_action.equals("back_to_home_page")) {
+                session.invalidate();
+                response.sendRedirect("/TravelCoachBookingTicket/home");
+                return;
             }
         }
     }
