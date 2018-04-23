@@ -21,6 +21,17 @@
         <link href="css/small-business.css" rel="stylesheet">
         <link href="css/hover.css" rel="stylesheet">
         <link href="css/fontawesome-all.css" rel="stylesheet"> 
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script type="text/javascript">
+            function handleSelectDepartureCity(element)
+            {
+                window.location = "/TravelCoachBookingTicket/ticket_1?button_action=select_departure_city&departure_city_index=" + element.value;
+            }
+            function handleSelectDestinationCity(element) {
+                window.location = "/TravelCoachBookingTicket/ticket_1?button_action=select_destination_city&selected_destination_city_index_request=" + element.value;
+            }
+        </script>
     </head>
 
     <body>
@@ -30,9 +41,9 @@
                 <a class="navbar-brand" href="#"><img class="img_logo" src="img/logo_horizonal.png" width="150px"></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
-                     <ul class="navbar-nav ml-auto">
-                         <li class="nav-item"> <a class="nav-link hvr-underline-from-left" href="index.jsp">Trang chủ
-                                
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item"> <a class="nav-link hvr-underline-from-left" href="index.jsp">Trang chủ
+
                             </a> </li>
                         <li class="nav-item active"> <a class="nav-link hvr-underline-from-left" href="#">Đặt vé<span class="sr-only">(current)</span></a> </li>
                         <li class="nav-item"> <a class="nav-link hvr-underline-from-left" href="#">Giới thiệu</a> </li>
@@ -61,7 +72,7 @@
                                     <c:set var="selected_departure_city_index" value="${sessionScope.selected_departure_city_index}"/>
                                     <c:set var="index" value="${0}" />
                                     <p>Điểm khởi hành <span>*</span></p><span class="icon-case"><i class="fa fa-bus"></i></span>
-                                    <select  id="origin" class="form-control selectpicker bs-select-hidden" name="departure_city_index" onchange="javascript:handleSelectDepartureCity(this)" required>
+                                    <select onchange="javascript:handleSelectDepartureCity(this)"  id="departure" class="form-control selectpicker bs-select-hidden" name="departure_city_index" required>
                                         <option value="" disabled selected>&nbsp;</option>
                                         <c:forEach items="${sessionScope.departure_city_or_district_name_list}" var="departure_city_or_district_name">
                                             <c:choose>
@@ -77,7 +88,7 @@
                                                         </option>
                                                     </c:if>
                                                 </c:when>
-                                                <c:when test="${selected_departure_city_name == null}">
+                                                <c:when test="${selected_departure_city_index== null}">
                                                     <option value="${index}">
                                                         ${departure_city_or_district_name}
                                                     </option>
@@ -99,14 +110,32 @@
                                     <p>Điểm đến <span>*</span></p><span class="icon-case"><i class="fa fa-bus"></i></span>
                                     <div class="controls">
                                         <c:set var="index1" value="${0}" />
-                                        <select name="destination_city_index" id="idDest" class="form-control  selectpicker bs-select-hidden" required>
+                                        <select onchange="handleSelectDestinationCity(this)" name="destination_city_index" id="destination" class="form-control  selectpicker bs-select-hidden" required>
                                             <option value="" disabled selected>&nbsp;</option>
-                                            <c:forEach items="${sessionScope.destination_city_or_district_name_list}" var="destination_city_or_district_name">
-                                                <option value="${index1}">
-                                                    ${destination_city_or_district_name}
-                                                </option>
-                                                <c:set var="index1" value="${index1 + 1}" />
-                                            </c:forEach>
+                                            <c:if test="${sessionScope.destination_city_or_district_name_list != null}">
+                                                <c:forEach items="${sessionScope.destination_city_or_district_name_list}" var="destination_city_or_district_name">
+                                                    <c:choose>
+                                                        <c:when test="${selected_destination_city_index != null}">
+                                                            <c:if test="${index1 == selected_destination_city_index}">
+                                                                <option value="${index1}" selected>
+                                                                    ${destination_city_or_district_name}
+                                                                </option>
+                                                            </c:if>
+                                                            <c:if test="${index1 != selected_destination_city_index}">
+                                                                <option value="${index1}">
+                                                                    ${destination_city_or_district_name}
+                                                                </option>
+                                                            </c:if>
+                                                        </c:when>
+                                                        <c:when test="${selected_destination_city_index == null}">
+                                                            <option value="${index1}">
+                                                                ${destination_city_or_district_name}
+                                                            </option>
+                                                        </c:when>
+                                                    </c:choose>
+                                                    <c:set var="index1" value="${index1 + 1}" />
+                                                </c:forEach>
+                                            </c:if>
                                         </select>
                                     </div>
                                     <div class="validation"></div>
@@ -121,9 +150,35 @@
                 <!-- /.col-lg-8 -->
                 <div class="col-lg-6 result-panel">
                     <h1 class="title-name">Thông tin chung</h1>
-                    <div class="row mg-t10 row-content"> <h5><strong>Chau Doc ⇒ Can Tho</strong> - Khoảng cách:&nbsp;<strong>116 Km</strong> - Thời gian:&nbsp;<strong>4 giờ</strong></h5>
-                        <div ng-repeat="s in r.RouteStops" ng-if="s.Type == 0"> <span><i class="fa fa-dot-circle-o"></i>&nbsp;&nbsp;Bến đi:&nbsp;VP Châu Đốc: 89 Phan Văn Vàng, P.Châu Phú A , TP.Châu Đốc (TERMINAL BUS STATION)</span> </div>
-                        <div ng-repeat="s in r.RouteStops" ng-if="s.Type == 0"> <span><i class="fa fa-dot-circle-o"></i>&nbsp;&nbsp;Bến đi:&nbsp;VP BX Châu Đốc, Đường Tôn Đức Thắng , P.Vĩnh Mỹ , TP.Châu Đốc (TERMINAL BUS STATION)</span> </div>
+                    <div class="row mg-t10 row-content"> 
+                        <h5>
+                            <br>Tỉnh/thành phố đi:&nbsp;<strong id="google_map_departure">
+                                <c:if test="${sessionScope.selected_departure_city_index != null}">
+                                    ${sessionScope.departure_city_or_district_name_list.get(selected_departure_city_index)}.
+                                </c:if>
+                            </strong> 
+                            <br>Tỉnh/thành phố đến:&nbsp;<strong id="google_map_destination">
+                                <c:if test="${sessionScope.destination_city_or_district_name_list != null && selected_destination_city_index != null}">
+                                    ${sessionScope.destination_city_or_district_name_list.get(selected_destination_city_index)}.
+                                </c:if>
+                            </strong> 
+                            <br>Khoảng cách:&nbsp;<strong>
+                                <c:if test="${sessionScope.distance != null}">
+                                    ${sessionScope.distance}.
+                                </c:if>
+                                <c:if test="${sessionScope.distance == null}">
+                                    &ensp;
+                                </c:if>
+                            </strong>
+                            <br>Thời gian (dự kiến):&nbsp;<strong>
+                                <c:if test="${sessionScope.duration != null}">
+                                    ${sessionScope.duration}.
+                                </c:if>
+                                <c:if test="${sessionScope.duration == null}">
+                                    &ensp;
+                                </c:if>
+                            </strong>
+                        </h5>
                     </div>
                     <!-- /.col-md-4 -->
                 </div>
@@ -140,27 +195,19 @@
                 <!-- /.container -->
             </footer>
         </div>
-    </body>
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript">
-                            function handleSelectDepartureCity(element)
-                            {
-                                window.location = "/TravelCoachBookingTicket/ticket_1?button_action=select_departure_city&departure_city_index=" + element.value;
-                            }
-                            var today = new Date();
-                            var dd = today.getDate() + 1;
-                            var mm = today.getMonth() + 1; //January is 0!
-                            var yyyy = today.getFullYear();
-                            if (dd < 10) {
-                                dd = 1 + dd;
-                            }
-                            if (mm < 10) {
-                                mm = '0' + mm;
-                            }
-
-                            today = yyyy + '-' + mm + '-' + dd;
-                            document.getElementById("start_date").setAttribute("min", today);
+    </body>    
+    <script>
+        var today = new Date();
+        var dd = today.getDate() + 1;
+        var mm = today.getMonth() + 1; //January is 0!
+        var yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = 1 + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        today = yyyy + '-' + mm + '-' + dd;
+        document.getElementById("start_date").setAttribute("min", today);
     </script>
-
 </html>

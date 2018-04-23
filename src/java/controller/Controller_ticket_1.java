@@ -5,10 +5,22 @@
  */
 package controller;
 
+import com.google.maps.DistanceMatrixApiRequest;
+import com.google.maps.GeoApiContext;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.DistanceMatrix;
+import com.google.maps.model.DistanceMatrixElement;
+import com.google.maps.model.DistanceMatrixRow;
+import com.google.maps.model.TrafficModel;
+import com.google.maps.model.TransitMode;
+import com.google.maps.model.TravelMode;
+import com.google.maps.model.Unit;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,6 +33,7 @@ import model.database.dao.TripDAO;
 import model.database.pojo.Cityordistrict;
 import model.database.pojo.Line;
 import model.database.pojo.Trip;
+import org.joda.time.DateTime;
 
 /**
  *
@@ -59,8 +72,60 @@ public class Controller_ticket_1 extends HttpServlet {
 
                     //Get available destination city names of trip that has the departure city name above
                     List<String> destination_city_or_district_name_list = TripDAO.get_destination_city_name_list_by_departure_city_name(departure_city_name);
-                    session.setAttribute("destination_city_or_district_name_list", destination_city_or_district_name_list);
+
+                    if (!destination_city_or_district_name_list.isEmpty()) {
+                        session.setAttribute("destination_city_or_district_name_list", destination_city_or_district_name_list);
+                    } else {
+                        session.setAttribute("destination_city_or_district_name_list", null);
+                    }
+                    session.setAttribute("distance", null);
+                    session.setAttribute("duration", null);
+                    session.setAttribute("selected_destination_city_index", null);
                     session.setAttribute("selected_departure_city_index", departure_city_index);
+                    RequestDispatcher rd = request.getRequestDispatcher(TICKET_1);
+                    rd.forward(request, response);
+                    break;
+                }
+                case "select_destination_city": {
+                    int selected_destination_city_index = Integer.parseInt(request.getParameter("selected_destination_city_index_request"));
+                    int selected_departure_city_index = (int) session.getAttribute("selected_departure_city_index");
+                    session.setAttribute("selected_destination_city_index", selected_destination_city_index);
+
+                    List<String> departure_city_or_district_name_list = CityOrDistrictDAO.get_city_or_district_name_list();
+                    String departure_city_name = departure_city_or_district_name_list.get(selected_departure_city_index);
+                    List<String> destination_city_or_district_name_list = TripDAO.get_destination_city_name_list_by_departure_city_name(departure_city_name);
+                    if (!destination_city_or_district_name_list.isEmpty()) {
+                        String destination_city_name = destination_city_or_district_name_list.get(selected_destination_city_index);
+                        try {
+                            GeoApiContext.Builder builder = new GeoApiContext.Builder();
+                            builder.apiKey("AIzaSyAIUVFjHg840O3E0VNv6ZshOEcjr9U5UMA");
+                            GeoApiContext context = builder.build();
+                            DistanceMatrixApiRequest distanceMatrix = new DistanceMatrixApiRequest(context);
+                            distanceMatrix.mode(TravelMode.DRIVING);
+                            distanceMatrix.trafficModel(TrafficModel.OPTIMISTIC);
+                            distanceMatrix.language("vi");
+                            distanceMatrix.transitModes(TransitMode.BUS);
+                            distanceMatrix.units(Unit.METRIC);
+                            distanceMatrix.departureTime(new DateTime());
+                            distanceMatrix.origins(departure_city_name);
+                            distanceMatrix.destinations(destination_city_name);
+                            DistanceMatrix await = distanceMatrix.await();
+                            DistanceMatrixRow[] rows = await.rows;
+                            for (DistanceMatrixRow row : rows) {
+                                DistanceMatrixElement[] elements = row.elements;
+                                for (DistanceMatrixElement element : elements) {
+                                    session.setAttribute("distance", element.distance);
+                                    session.setAttribute("duration", element.duration);
+                                }
+                            }
+                        } catch (ApiException | InterruptedException | IOException ex) {
+                            Logger.getLogger(Controller_ticket_1.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        session.setAttribute("distance", null);
+                        session.setAttribute("duration", null);
+                    }
+
                     RequestDispatcher rd = request.getRequestDispatcher(TICKET_1);
                     rd.forward(request, response);
                     break;
