@@ -24,7 +24,6 @@ import model.database.dao.InvoicelineitemDAO;
 import model.database.dao.LineDAO;
 import model.database.dao.SeatDAO;
 import model.database.dao.TicketDAO;
-import model.database.hibernate.HibernateUtil;
 import model.database.pojo.Customer;
 import model.database.pojo.Invoice;
 import model.database.pojo.Invoicelineitem;
@@ -33,7 +32,6 @@ import model.database.pojo.Schedule;
 import model.database.pojo.Seat;
 import model.database.pojo.Ticket;
 import model.database.pojo.Trip;
-import org.hibernate.Session;
 
 /**
  *
@@ -123,19 +121,19 @@ public class Controller_ticket_3 extends HttpServlet {
                     int seat_exception;
                     int index = -1;
                     List<Seat> selected_seat_list = (List<Seat>) session.getAttribute("selected_seat_list");
-                    Session hibernate_session = HibernateUtil.getSessionFactory().openSession();
                     for (Seat seat : selected_seat_list) {
                         seat_exception = seat.getSeatNumber();
                         index += 1;
                         byte seat_status = 1;
                         seat.setSeatStatus(seat_status);
                         try {
-                            hibernate_session.beginTransaction();
-                            hibernate_session.saveOrUpdate(seat);
-                            hibernate_session.getTransaction().commit();
+                            SeatDAO.update_seat(seat);
                         } catch (Exception e) {
-                            if (hibernate_session.getTransaction().isActive()) {
-                                hibernate_session.getTransaction().rollback();
+                            for (int i = 0; i < index; i++) {
+                                Seat roll_back_seat = selected_seat_list.get(i);
+                                byte roll_back_seat_status = 0;
+                                roll_back_seat.setSeatStatus(roll_back_seat_status);
+                                SeatDAO.update_seat(roll_back_seat);
                             }
                             request.setAttribute("is_success_invoice", false);
                             request.setAttribute("error_message", seat_exception);
@@ -143,8 +141,6 @@ public class Controller_ticket_3 extends HttpServlet {
                             rd.forward(request, response);
                         }
                     }
-                    hibernate_session.flush();
-                    hibernate_session.close();
 
                     Invoice invoice = new Invoice(trip, invoiceDueDate, total_price, modifiedDate, invoiceStatus, invoiceAddedDate);
                     InvoiceDAO.add_invoice(invoice);
@@ -178,6 +174,11 @@ public class Controller_ticket_3 extends HttpServlet {
                         String param = prefix + selected_seat;
                         session.setAttribute(param, true);
                     });
+                    RequestDispatcher rd = request.getRequestDispatcher(TICKET_2);
+                    rd.forward(request, response);
+                    break;
+                }
+                case "back_to_ticket_2": {
                     RequestDispatcher rd = request.getRequestDispatcher(TICKET_2);
                     rd.forward(request, response);
                     break;

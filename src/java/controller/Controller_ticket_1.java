@@ -61,13 +61,6 @@ public class Controller_ticket_1 extends HttpServlet {
                     List<String> destination_city_or_district_name_list = TripDAO.get_destination_city_name_list_by_departure_city_name(departure_city_name);
                     session.setAttribute("destination_city_or_district_name_list", destination_city_or_district_name_list);
                     session.setAttribute("selected_departure_city_index", departure_city_index);
-
-//                    List<Integer> destination_city_or_district_id_list = new ArrayList<>();    
-//                    destination_city_or_district_name_list.forEach(item -> {
-//                        int city_or_district_id = CityOrDistrictDAO.get_city_or_district_id_by_name(item);
-//                        destination_city_or_district_id_list.add(city_or_district_id);
-//                    });
-//                    session.setAttribute("destination_city_or_district_id_list", out);
                     RequestDispatcher rd = request.getRequestDispatcher(TICKET_1);
                     rd.forward(request, response);
                     break;

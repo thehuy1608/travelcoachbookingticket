@@ -4,6 +4,7 @@
     Author     : User
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
@@ -29,10 +30,10 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item active"> <a class="nav-link hvr-underline-from-left" href="#">Trang chủ
-                                <span class="sr-only">(current)</span>
+                        <li class="nav-item"> <a class="nav-link hvr-underline-from-left" href="index.jsp">Trang chủ
+                                
                             </a> </li>
-                        <li class="nav-item"> <a class="nav-link hvr-underline-from-left" href="#">Đặt vé</a> </li>
+                        <li class="nav-item active"> <a class="nav-link hvr-underline-from-left" href="#">Đặt vé<span class="sr-only">(current)</span></a> </li>
                         <li class="nav-item"> <a class="nav-link hvr-underline-from-left" href="#">Giới thiệu</a> </li>
                         <li class="nav-item"> <a class="nav-link hvr-underline-from-left" href="#">Liên hệ</a> </li>
                     </ul>
@@ -106,7 +107,11 @@
                             </div>
                         </div>
                         <div class="form-section">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-ms-12"> <a class="btn btn-primary btn-flat" style="color: white;margin-left: 20px"><i class="fa fa-arrow-left icon-flat bg-btn-actived" ></i> Quay lại</a>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-ms-12"> 
+                                <c:url var="back_to_ticket_2_link" value="/ticket_3" context="/TravelCoachBookingTicket">
+                                    <c:param name="button_action" value="back_to_ticket_2"></c:param>
+                                </c:url>
+                                <a onclick="handleOnclickButtonBackToTicket2(this)"  href="${back_to_ticket_2_link}" class="btn btn-primary btn-flat" style="color: white;margin-left: 20px"><i class="fa fa-arrow-left icon-flat bg-btn-actived" ></i> Quay lại</a>
                                 <button type="submit" class="btn btn-success btn-flat" name="button_action" value="order"><i class="fa fa-arrow-right icon-flat "></i>Đặt vé</button>
                             </div>
                         </div>
@@ -131,6 +136,11 @@
         <!-- Bootstrap core JavaScript -->
         <script src="vendor/jquery/jquery.min.js"></script>
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script>
+            function handleOnclickButtonBackToTicket2(element) {
+                alert('Xin vui lòng chọn lại vị trí ghế ngồi.');
+            }
+        </script>
     </body>
 
 </html>

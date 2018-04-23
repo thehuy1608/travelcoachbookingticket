@@ -105,6 +105,11 @@ public class Controller_ticket_2 extends HttpServlet {
                     RequestDispatcher rd = request.getRequestDispatcher(TICKET_2);
                     rd.forward(request, response);
                 }
+                case "back_to_ticket_1":
+                    session.setAttribute("selected_departure_city_index", -1);
+                    RequestDispatcher rd = request.getRequestDispatcher(TICKET_1);
+                    rd.forward(request, response);
+                    break;
             }
         }
     }

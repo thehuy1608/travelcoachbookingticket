@@ -29,11 +29,11 @@
                 <a class="navbar-brand" href="#"><img class="img_logo" src="img/logo_horizonal.png" width="150px"></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item active"> <a class="nav-link hvr-underline-from-left" href="#">Trang chủ
-                                <span class="sr-only">(current)</span>
+                    < <ul class="navbar-nav ml-auto">
+                        <li class="nav-item"> <a class="nav-link hvr-underline-from-left" href="index.jsp">Trang chủ
+
                             </a> </li>
-                        <li class="nav-item"> <a class="nav-link hvr-underline-from-left" href="#">Đặt vé</a> </li>
+                        <li class="nav-item active"> <a class="nav-link hvr-underline-from-left" href="#">Đặt vé<span class="sr-only">(current)</span></a> </li>
                         <li class="nav-item"> <a class="nav-link hvr-underline-from-left" href="#">Giới thiệu</a> </li>
                         <li class="nav-item"> <a class="nav-link hvr-underline-from-left" href="#">Liên hệ</a> </li>
                     </ul>
@@ -101,7 +101,11 @@
                             </div>
                         </div>
                         <div class="form-section">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-ms-12" style="margin-left: 20px;"> <a class="btn btn-primary btn-flat" style="color: white"><i class="fa fa-arrow-left icon-flat bg-btn-actived"></i> Quay lại</a>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-ms-12" style="margin-left: 20px;"> 
+                                <c:url var="back_to_ticket_1_link" context="/TravelCoachBookingTicket" value="/ticket_2">
+                                    <c:param name="button_action" value="back_to_ticket_1"></c:param>
+                                </c:url>
+                                <a href="${back_to_ticket_1_link}" class="btn btn-primary btn-flat" style="color: white"><i class="fa fa-arrow-left icon-flat bg-btn-actived"></i> Quay lại</a>
                                 <button onclick="handleOnclickNextButton(this)" type="submit" class="btn btn-success btn-flat" onclick=""><i class="fa fa-arrow-right icon-flat "></i>Tiếp tục</button>
                             </div>
                         </div>
@@ -377,42 +381,44 @@
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="js/angular-js.js"></script>
 <script>
-                                    var chosen_seat_numbers = [];
-                                    var total_price = 0;
-                                    function handleSelectLine(element)
-                                    {
-                                        window.location = "/TravelCoachBookingTicket/ticket_2?button_action=select_line&line_id=" + element.value;
-                                    }
-                                    function handleSelectStartTime(element) {
-                                        window.location = "/TravelCoachBookingTicket/ticket_2?button_action=select_start_time&schedule_index=" + element.value;
-                                    }
-                                    function handleOnclickSeatCheckbox(element) {
-                                        var prefix = 'seatCheckbox';
-                                        var seat_number = element.value;
-                                        var seat_id = prefix + seat_number;
-                                        var checked_value = document.querySelector('#' + seat_id).checked;
-                                        if (checked_value) {
-                                            chosen_seat_numbers.push(seat_number);
-                                            total_price = total_price + 100000;
-                                        } else {
-                                            total_price = total_price - 100000;
-                                            var index = chosen_seat_numbers.indexOf(seat_number);
-                                            if (index > -1) {
-                                                chosen_seat_numbers.splice(index, 1);
+                                        var chosen_seat_numbers = [];
+                                        var total_price = 0;
+                                        function handleSelectLine(element)
+                                        {
+                                            window.location = "/TravelCoachBookingTicket/ticket_2?button_action=select_line&line_id=" + element.value;
+                                        }
+                                        function handleSelectStartTime(element) {
+                                            window.location = "/TravelCoachBookingTicket/ticket_2?button_action=select_start_time&schedule_index=" + element.value;
+                                        }
+                                        function handleOnclickSeatCheckbox(element) {
+                                            var prefix = 'seatCheckbox';
+                                            var seat_number = element.value;
+                                            var seat_id = prefix + seat_number;
+                                            var checked_value = document.querySelector('#' + seat_id).checked;
+                                            if (checked_value) {
+                                                chosen_seat_numbers.push(seat_number);
+                                                total_price = total_price + 100000;
+                                            } else {
+                                                total_price = total_price - 100000;
+                                                var index = chosen_seat_numbers.indexOf(seat_number);
+                                                if (index > -1) {
+                                                    chosen_seat_numbers.splice(index, 1);
+                                                }
+                                            }
+                                            if (chosen_seat_numbers.length === 0) {
+                                                document.getElementById("seat_numbers").innerHTML = "Chưa chọn ghế.";
+                                            } else {
+                                                document.getElementById("seat_numbers").innerHTML = chosen_seat_numbers.join();
+                                            }
+                                            document.getElementById("total_price").innerHTML = total_price;
+                                        }
+                                        function handleOnclickNextButton(element) {
+                                            if (chosen_seat_numbers.length !== 0) {
+                                                window.location = "/TravelCoachBookingTicket/ticket_3?button_action=redirect_to_ticket_3&chosen_seat_numbers=" + chosen_seat_numbers;
+                                            } else {
+                                                alert('Bạn chưa chọn ghế ngồi.');
                                             }
                                         }
-                                        if (chosen_seat_numbers.length === 0) {
-                                            document.getElementById("seat_numbers").innerHTML = "Chưa chọn ghế.";
-                                        } else {
-                                            document.getElementById("seat_numbers").innerHTML = chosen_seat_numbers.join();
-                                        }
-                                        document.getElementById("total_price").innerHTML = total_price;
-                                    }
-                                    function handleOnclickNextButton(element) {
-                                        if (chosen_seat_numbers.length !== 0) {
-                                            window.location = "/TravelCoachBookingTicket/ticket_3?button_action=redirect_to_ticket_3&chosen_seat_numbers=" + chosen_seat_numbers;
-                                        }
-                                    }
 </script>
 </body>
 

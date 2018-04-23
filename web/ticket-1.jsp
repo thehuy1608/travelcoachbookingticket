@@ -30,11 +30,11 @@
                 <a class="navbar-brand" href="#"><img class="img_logo" src="img/logo_horizonal.png" width="150px"></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item active"> <a class="nav-link hvr-underline-from-left" href="#">Trang chủ
-                                <span class="sr-only">(current)</span>
+                     <ul class="navbar-nav ml-auto">
+                         <li class="nav-item"> <a class="nav-link hvr-underline-from-left" href="index.jsp">Trang chủ
+                                
                             </a> </li>
-                        <li class="nav-item"> <a class="nav-link hvr-underline-from-left" href="#">Đặt vé</a> </li>
+                        <li class="nav-item active"> <a class="nav-link hvr-underline-from-left" href="#">Đặt vé<span class="sr-only">(current)</span></a> </li>
                         <li class="nav-item"> <a class="nav-link hvr-underline-from-left" href="#">Giới thiệu</a> </li>
                         <li class="nav-item"> <a class="nav-link hvr-underline-from-left" href="#">Liên hệ</a> </li>
                     </ul>
@@ -100,6 +100,7 @@
                                     <div class="controls">
                                         <c:set var="index1" value="${0}" />
                                         <select name="destination_city_index" id="idDest" class="form-control  selectpicker bs-select-hidden" required>
+                                            <option value="" disabled selected>&nbsp;</option>
                                             <c:forEach items="${sessionScope.destination_city_or_district_name_list}" var="destination_city_or_district_name">
                                                 <option value="${index1}">
                                                     ${destination_city_or_district_name}
